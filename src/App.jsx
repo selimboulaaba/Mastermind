@@ -18,29 +18,25 @@ function App() {
   const [currentTry, setCurrentTry] = useState(5)
   const [displayResult, setDisplayResult] = useState(false)
 
-
   const checkWinner = () => {
     let winner = true;
+    let tmpResult = []
     for (let i = 0; i < result.length; i++) {
       if (combination[currentTry][i] === result[i]) {
-        setResutCombination(prevCombination => {
-          return {
-            ...prevCombination,
-            [currentTry]: prevCombination[currentTry].map((item, index) => (((index === 0 && item === null) || (prevCombination[currentTry][index - 1] != null)) ? "grey" : item)),
-          };
-        });
+        tmpResult.push("grey")
       } else if (combination[currentTry].includes(result[i])) {
+        tmpResult.push("black")
         winner = false;
-        setResutCombination(prevCombination => {
-          return {
-            ...prevCombination,
-            [currentTry]: prevCombination[currentTry].map((item, index) => (((index === 0 && item === null) || (prevCombination[currentTry][index - 1] != null)) ? "black" : item)),
-          };
-        });
       } else {
         winner = false;
       }
     }
+    setResutCombination(prevCombination => {
+        return {
+          ...prevCombination,
+          [currentTry]: tmpResult
+        };
+      });
     return winner;
   }
 
