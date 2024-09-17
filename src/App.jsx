@@ -16,6 +16,7 @@ function App() {
   const [resultCombination, setResutCombination] = useState(initialState)
   const [combination, setCombination] = useState(initialState)
   const [currentTry, setCurrentTry] = useState(5)
+  const [displayResult, setDisplayResult] = useState(false)
 
 
   const checkWinner = () => {
@@ -52,6 +53,7 @@ function App() {
     }
     if (nextTurn) {
       if (checkWinner()) {
+        setDisplayResult(true)
         toast.success('Nice Job!', {
           position: "top-right",
           autoClose: 5000,
@@ -64,6 +66,20 @@ function App() {
           transition: Bounce,
         });
       } else {
+        if (currentTry === 0) {
+          setDisplayResult(true)
+          toast.error('You Lose!', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            transition: Bounce,
+          });
+        }
         setCurrentTry(currentTry - 1)
       }
     }
@@ -88,6 +104,7 @@ function App() {
     setCombination(initialState)
     setResutCombination(initialState)
     setCurrentTry(5)
+    setDisplayResult(false)
   }
 
   const getChosenColorStyle = (list) => {
@@ -152,7 +169,7 @@ function App() {
       </div>
 
       <div className="flex mt-5">
-        {result.length != 0 && result.map(color => (
+        {displayResult && result.map(color => (
           <div key={color} style={getColorStyle(color)} className='mt-10 h-10 w-10 rounded-full border' />
         ))}
       </div>
