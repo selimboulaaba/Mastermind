@@ -137,7 +137,7 @@ function App() {
         setCombination(prevCombination => {
           return {
             ...prevCombination,
-            [list[0]]: prevCombination[currentTry].map((item, index) => (index === list[1] && item === null ? selectedColor : item)),
+            [list[0]]: prevCombination[currentTry].map((item, index) => (index === list[1] ? selectedColor : item)),
           };
         });
       }
