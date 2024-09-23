@@ -24,7 +24,7 @@ function SingleColors() {
         let tmpResult = []
         for (let i = 0; i < result.length; i++) {
             if (combination[currentTry][i] === result[i]) {
-                tmpResult.push("grey")
+                tmpResult.push("white")
             } else if (combination[currentTry].includes(result[i])) {
                 tmpResult.push("black")
                 winner = false;
@@ -52,7 +52,7 @@ function SingleColors() {
             if (checkWinner()) {
                 setDisplayResult(true)
                 toast.success('Nice Job!', {
-                    position: "top-right",
+                    position: "bottom-center",
                     autoClose: 5000,
                     hideProgressBar: false,
                     closeOnClick: true,
@@ -66,7 +66,7 @@ function SingleColors() {
                 if (currentTry === 0) {
                     setDisplayResult(true)
                     toast.error('You Lose!', {
-                        position: "top-right",
+                        position: "bottom-center",
                         autoClose: 5000,
                         hideProgressBar: false,
                         closeOnClick: true,
@@ -110,8 +110,8 @@ function SingleColors() {
 
     const selectChosenColor = (list) => {
         if (result.length === 0) {
-            toast.error('You must Generate a Combination!', {
-                position: "top-right",
+            toast.error('Generate a Combination First!', {
+                position: "bottom-center",
                 autoClose: 5000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -122,8 +122,8 @@ function SingleColors() {
                 transition: Bounce,
             });
         } else if (!selectedColor) {
-            toast.error('You must choose a Color!', {
-                position: "top-right",
+            toast.error('Choose a Color!', {
+                position: "bottom-center",
                 autoClose: 5000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -150,56 +150,61 @@ function SingleColors() {
     }
 
     return (
-        <div className="flex items-center justify-center">
-            <div className=''>
-                <div className="flex mt-10">
-                    <div style={{ backgroundColor: 'grey' }} className=' h-10 w-10 rounded-full border' />
-                    <div className="mt-2 font-bold">Correct Place</div>
-                </div>
-                <div className="flex mb-5">
-                    <div style={{ backgroundColor: 'black' }} className='h-10 w-10 rounded-full border' />
-                    <div className="mt-2 font-bold">Incorrect Place but Exists</div>
-
-                </div>
-
-                <h5 className="font-bold">Choose a Color:</h5>
+        <div className="flex items-center justify-center text-black">
+            <div className='border-4 rounded-xl border-amber-900 mt-10 p-3'>
                 <div className="flex">
-                    {colors.map(color => (
-                        <div key={color} onClick={() => setSelectedColor(color)} style={getColorStyle(color)} className={`h-10 w-10 rounded-full border-4  hover:cursor-pointer mx-1 ${selectedColor === color ? 'border-black' : ''}`} />
-                    ))}
+                    <div style={{ backgroundColor: 'white' }} className=' h-10 w-10 rounded-full border border-black' />
+                    <div className="mt-2 font-semibold pl-2">Correct Place</div>
+                </div>
+                <div className="flex mb-5 mt-1">
+                    <div style={{ backgroundColor: 'black' }} className='h-10 w-10 rounded-full border border-black' />
+                    <div className="mt-2 font-semibold pl-2">Incorrect Place but Exists</div>
+
                 </div>
 
                 {result.length !== 0 && <div className="my-5">
-                    <h5 className="font-bold">Try to Guess:</h5>
+                    <h5 className="font-semibold">Try to Guess:</h5>
                     <div className="flex">
                         {result.map(color => (
-                            <div key={color} style={displayResult ? getColorStyle(color) : { backgroundColor: '#DAD6D6' }} className='h-10 w-10 rounded-full mx-1 border border-black' />
+                            <div key={color} style={displayResult ? getColorStyle(color) : { backgroundColor: 'grey' }} className='h-10 w-10 rounded-full mx-1 border border-black' />
                         ))}
                     </div>
                 </div>
                 }
 
-                {Array(6).fill(null).map((row, indexRow) => (
-                    <div key={indexRow} className="flex">
-                        {Array(4).fill(null).map((col, indexCol) => (
-                            <div key={indexRow + '-' + indexCol} onClick={() => selectChosenColor([indexRow, indexCol])} style={getChosenColorStyle([indexRow, indexCol])} className={`h-10 w-10 border border-black rounded-full m-1 ${indexRow === currentTry ? 'hover:cursor-pointer' : ''}`} />
-                        ))}
-                        <div>
-                            <div className="flex">
-                                {Array(2).fill(null).map((col, indexCol) => (
-                                    <div key={indexRow + '-' + indexCol} style={getResultColorStyle([indexRow, indexCol])} className={`h-5 w-5 border border-black rounded-full m-1`} />
+                <div className="border-y-4 rounded-xl border-amber-900">
+                    {Array(6).fill(null).map((row, indexRow) => (
+                        <div key={indexRow} className="grid grid-cols-5">
+                            <div className="col-span-4 flex">
+                                {Array(4).fill(null).map((col, indexCol) => (
+                                    <div key={indexRow + '-' + indexCol} onClick={() => selectChosenColor([indexRow, indexCol])} style={getChosenColorStyle([indexRow, indexCol])} className={`h-10 w-10 border border-black rounded-full m-1 ${indexRow === currentTry ? 'hover:cursor-pointer' : ''}`} />
                                 ))}
                             </div>
-                            <div className="flex">
-                                {Array(2).fill(null).map((col, indexCol) => (
-                                    <div key={indexRow + '-' + indexCol} style={getResultColorStyle([indexRow, indexCol + 2])} className={`h-5 w-5 border border-black rounded-full m-1`} />
-                                ))}
+
+                            <div className="col-span-1">
+                                <div className="flex">
+                                    {Array(2).fill(null).map((col, indexCol) => (
+                                        <div key={indexRow + '-' + indexCol} style={getResultColorStyle([indexRow, indexCol])} className={`h-5 w-5 border border-black rounded-full m-1`} />
+                                    ))}
+                                </div>
+                                <div className="flex">
+                                    {Array(2).fill(null).map((col, indexCol) => (
+                                        <div key={indexRow + '-' + indexCol} style={getResultColorStyle([indexRow, indexCol + 2])} className={`h-5 w-5 border border-black rounded-full m-1`} />
+                                    ))}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
 
-                <button onClick={generate} className="rounded-md w-full mt-5 border border-black px-3 py-2 hover:bg-black hover:text-white">New Game</button>
+                <h5 className="font-semibold text-center mt-4">Choose a Color:</h5>
+                <div className="flex">
+                    {colors.map(color => (
+                        <div key={color} onClick={() => setSelectedColor(color)} style={getColorStyle(color)} className={`h-10 w-10 rounded-full  hover:cursor-pointer mx-1 ${selectedColor === color ? 'border-black border-8' : 'border border-black'}`} />
+                    ))}
+                </div>
+
+                <button onClick={generate} className="rounded-md w-full mt-5 border border-amber-900 px-3 py-2 hover:bg-amber-900 hover:text-white">New Game</button>
 
             </div>
         </div>
