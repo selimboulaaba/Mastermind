@@ -1,5 +1,3 @@
-- Project Link: [https://mastermind-lemon.vercel.app/](https://mastermind-lemon.vercel.app/)
-
 # Mastermind
 
 [![Website](https://img.shields.io/website?url=https://mastermind-lemon.vercel.app/)](https://mastermind-lemon.vercel.app/)
