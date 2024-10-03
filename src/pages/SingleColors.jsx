@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Bounce, toast } from "react-toastify";
+import { SlArrowDown } from "react-icons/sl";
+import { SlArrowUp } from "react-icons/sl";
 
 function SingleColors() {
 
@@ -18,6 +20,7 @@ function SingleColors() {
     const [combination, setCombination] = useState(initialState)
     const [currentTry, setCurrentTry] = useState(5)
     const [displayResult, setDisplayResult] = useState(false)
+    const [accordionOpen, setAccordionOpen] = useState(false);
 
     const checkWinner = () => {
         let winner = true;
@@ -32,6 +35,7 @@ function SingleColors() {
                 winner = false;
             }
         }
+        tmpResult.sort((a, b) => a === "white" ? -1 : 1);
         setResutCombination(prevCombination => {
             return {
                 ...prevCombination,
@@ -150,62 +154,127 @@ function SingleColors() {
     }
 
     return (
-        <div className="flex items-center justify-center text-black">
-            <div className='border-4 rounded-xl border-amber-900 mt-10 p-3'>
-                <div className="flex">
-                    <div style={{ backgroundColor: 'white' }} className=' h-10 w-10 rounded-full border border-black' />
-                    <div className="mt-2 font-semibold pl-2">Correct Place</div>
-                </div>
-                <div className="flex mb-5 mt-1">
-                    <div style={{ backgroundColor: 'black' }} className='h-10 w-10 rounded-full border border-black' />
-                    <div className="mt-2 font-semibold pl-2">Incorrect Place but Exists</div>
-
-                </div>
-
-                {result.length !== 0 && <div className="my-5">
-                    <h5 className="font-semibold">Try to Guess:</h5>
+        <div>
+            <div className="flex items-center justify-center text-black">
+                <div className="border-4 rounded-xl border-amber-900 mt-7 lg:mt-14 p-3">
                     <div className="flex">
-                        {result.map(color => (
-                            <div key={color} style={displayResult ? getColorStyle(color) : { backgroundColor: 'grey' }} className='h-10 w-10 rounded-full mx-1 border border-black' />
+                        <div style={{ backgroundColor: 'white' }} className=' h-10 w-10 rounded-full border border-black' />
+                        <div className="mt-2 font-semibold pl-2">Correct Place</div>
+                    </div>
+                    <div className="flex mb-5 mt-1">
+                        <div style={{ backgroundColor: 'black' }} className='h-10 w-10 rounded-full border border-black' />
+                        <div className="mt-2 font-semibold pl-2">Incorrect Place but Exists</div>
+
+                    </div>
+
+                    {result.length !== 0 && <div className="my-5">
+                        <h5 className="font-semibold">Try to Guess:</h5>
+                        <div className="flex">
+                            {result.map(color => (
+                                <div key={color} style={displayResult ? getColorStyle(color) : { backgroundColor: 'grey' }} className='h-10 w-10 rounded-full mx-1 border border-black' />
+                            ))}
+                        </div>
+                    </div>
+                    }
+
+                    <div className="border-y-4 rounded-xl border-amber-900">
+                        {Array(6).fill(null).map((row, indexRow) => (
+                            <div key={indexRow} className="grid grid-cols-5">
+                                <div className="col-span-4 flex">
+                                    {Array(4).fill(null).map((col, indexCol) => (
+                                        <div key={indexRow + '-' + indexCol} onClick={() => selectChosenColor([indexRow, indexCol])} style={getChosenColorStyle([indexRow, indexCol])} className={`h-10 w-10 border border-black rounded-full m-1 ${indexRow === currentTry ? 'hover:cursor-pointer' : ''}`} />
+                                    ))}
+                                </div>
+
+                                <div className="col-span-1">
+                                    <div className="flex">
+                                        {Array(2).fill(null).map((col, indexCol) => (
+                                            <div key={indexRow + '-' + indexCol} style={getResultColorStyle([indexRow, indexCol])} className={`h-5 w-5 border border-black rounded-full m-1`} />
+                                        ))}
+                                    </div>
+                                    <div className="flex">
+                                        {Array(2).fill(null).map((col, indexCol) => (
+                                            <div key={indexRow + '-' + indexCol} style={getResultColorStyle([indexRow, indexCol + 2])} className={`h-5 w-5 border border-black rounded-full m-1`} />
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
                         ))}
                     </div>
+
+                    <h5 className="font-semibold text-center mt-4">Choose a Color:</h5>
+                    <div className="flex">
+                        {colors.map(color => (
+                            <div key={color} onClick={() => setSelectedColor(color)} style={getColorStyle(color)} className={`h-10 w-10 rounded-full  hover:cursor-pointer mx-1 ${selectedColor === color ? 'border-black border-8' : 'border border-black'}`} />
+                        ))}
+                    </div>
+
+                    <button onClick={generate} className="rounded-md w-full mt-5 border border-amber-900 px-3 py-2 hover:bg-amber-900 hover:text-white">New Game</button>
                 </div>
-                }
-
-                <div className="border-y-4 rounded-xl border-amber-900">
-                    {Array(6).fill(null).map((row, indexRow) => (
-                        <div key={indexRow} className="grid grid-cols-5">
-                            <div className="col-span-4 flex">
-                                {Array(4).fill(null).map((col, indexCol) => (
-                                    <div key={indexRow + '-' + indexCol} onClick={() => selectChosenColor([indexRow, indexCol])} style={getChosenColorStyle([indexRow, indexCol])} className={`h-10 w-10 border border-black rounded-full m-1 ${indexRow === currentTry ? 'hover:cursor-pointer' : ''}`} />
-                                ))}
-                            </div>
-
-                            <div className="col-span-1">
-                                <div className="flex">
-                                    {Array(2).fill(null).map((col, indexCol) => (
-                                        <div key={indexRow + '-' + indexCol} style={getResultColorStyle([indexRow, indexCol])} className={`h-5 w-5 border border-black rounded-full m-1`} />
-                                    ))}
-                                </div>
-                                <div className="flex">
-                                    {Array(2).fill(null).map((col, indexCol) => (
-                                        <div key={indexRow + '-' + indexCol} style={getResultColorStyle([indexRow, indexCol + 2])} className={`h-5 w-5 border border-black rounded-full m-1`} />
-                                    ))}
-                                </div>
-                            </div>
+            </div>
+            <div className="grid grid-cols-12 mb-16 mt-10">
+                <div className="col-span-12 lg:col-start-3 lg:col-span-8 p-4 bg-gray-200 bg-opacity-30 m-4 mb-0 rounded-lg cursor-pointer" onClick={() => setAccordionOpen(!accordionOpen)}>
+                    <button
+                        className="flex items-center justify-between text-slate-600 w-full text-2xl"
+                    >
+                        <span className="flex-1 text-left">Instructions</span>
+                        <div className="flex items-center">
+                            <SlArrowDown className={`shrink-0 w-6 h-6 ${accordionOpen && 'hidden'}`} />
+                            <SlArrowUp className={`shrink-0 w-6 h-6 ${!accordionOpen && 'hidden'}`} />
                         </div>
-                    ))}
+                    </button>
+                    <div
+                        className={`grid overflow-hidden transition-all duration-300 ease-in-out text-slate-600 text-sm ${accordionOpen
+                            ? "grid-rows-[1fr] opacity-100"
+                            : "grid-rows-[0fr] opacity-0"
+                            }`}
+                    >
+                        <div className="overflow-hidden">
+                            <hr className="border-t border-t-slate-600 mt-4 mb-2" />
+                            <h2 className="text-xl font-semibold">The Code</h2>
+                            <p className="">
+                                The code consists of 4 pegs, each with one of the available colors.
+                            </p>
+
+                            <h2 className="text-xl font-semibold mt-4">Making a Guess</h2>
+                            <p className="">
+                                You will have multiple attempts to guess the code. After each guess, you will receive feedback in the form of colored pegs:
+                            </p>
+                            <ul className="list-disc list-inside ml-4 mt-2 ">
+                                <li><span className="font-bold">White peg:</span> You guessed the correct color in the correct position.</li>
+                                <li><span className="font-bold">Black peg:</span> You guessed a correct color, but it’s in the wrong position.</li>
+                                <li><span className="font-bold">No peg:</span> The color is not in the code at all.</li>
+                            </ul>
+
+                            <h2 className="text-xl font-semibold mt-4">Feedback Example</h2>
+                            <p className="">
+                                If the secret code is: <span className="font-bold">Red, Blue, Green, Yellow</span><br />
+                                And your guess is: <span className="font-bold">Red, Yellow, Green, Blue</span>
+                            </p>
+                            <p className=" mt-2">
+                                Feedback:
+                            </p>
+                            <ul className="list-disc list-inside ml-4 ">
+                                <li><span className="font-bold">1 black peg</span> (Red is in the correct position)</li>
+                                <li><span className="font-bold">2 white pegs</span> (Blue and Yellow are correct colors but in the wrong positions)</li>
+                                <li><span className="font-bold">1 incorrect peg</span> (Green is correct but in the wrong position)</li>
+                            </ul>
+
+                            <h2 className="text-xl font-semibold mt-4">Winning the Game</h2>
+                            <p className="">
+                                You win if you guess the exact code (correct colors in the correct positions) within the given attempts.
+                            </p>
+
+                            <h2 className="text-xl font-semibold mt-4">Tips</h2>
+                            <ul className="list-disc list-inside ml-4 ">
+                                <li>Pay close attention to the feedback after each guess.</li>
+                                <li>Use logic and deduction to eliminate possible combinations.</li>
+                            </ul>
+
+                            <p className=" font-bold mt-4">Good luck, and have fun cracking the code!</p>
+                        </div>
+                    </div>
                 </div>
-
-                <h5 className="font-semibold text-center mt-4">Choose a Color:</h5>
-                <div className="flex">
-                    {colors.map(color => (
-                        <div key={color} onClick={() => setSelectedColor(color)} style={getColorStyle(color)} className={`h-10 w-10 rounded-full  hover:cursor-pointer mx-1 ${selectedColor === color ? 'border-black border-8' : 'border border-black'}`} />
-                    ))}
-                </div>
-
-                <button onClick={generate} className="rounded-md w-full mt-5 border border-amber-900 px-3 py-2 hover:bg-amber-900 hover:text-white">New Game</button>
-
             </div>
         </div>
     )
